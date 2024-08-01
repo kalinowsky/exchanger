@@ -5,7 +5,7 @@
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 80, 80, 200;
+  --background-end-rgb: 180, 180, 200;
 }
 
 
@@ -22,5 +22,12 @@ body {
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+.something {
+  & > select {
+    position: absolute;
+    right: 0px;
   }
 }
