@@ -36,7 +36,9 @@ export const fetchCurrencies = async (): Promise<FetchCurrenciesResult> => {
   }
 
   try {
-    const response = await fetch(getApiUrl({ type: "currencies" }) + "&api_key=" + apiKey)
+    const response = await fetch(getApiUrl({ type: "currencies" }) + "&api_key=" + apiKey, {
+      next: { revalidate: 60 },
+    })
     const uknownResult = await response.json()
     const result = await currencyResponseSchema.parseAsync(uknownResult)
     const transformedResult = result.response.map(convertKeysToCamelCase)
@@ -61,7 +63,6 @@ export const fetchConvert = async (params: {
 
   try {
     const url = getApiUrl({ type: "convert", payload: params }) + "&api_key=" + apiKey
-    console.log({ url })
     const response = await fetch(url)
     const uknownResult = await response.json()
     const result = await currencyConversionSchema.parseAsync(uknownResult)
