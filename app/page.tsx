@@ -1,4 +1,3 @@
-import Image from "next/image"
 import { Exchanger } from "../components/Exchanger"
 
 export default function Home() {
