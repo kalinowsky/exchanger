@@ -34,3 +34,4 @@ yarn test
 - Fetch functions return discriminated union types, which helps in proper error handling on the UI
 - Tests have been added for the most crucial parts of the app, such as fetch functions and the calculator component
 - User input is debounced to prevent unnecessary additional requests to the API
+- I've moved finally some logic from Calculator component to hook and wrote tests for that hook
