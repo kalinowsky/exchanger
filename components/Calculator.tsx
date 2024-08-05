@@ -34,7 +34,7 @@ export const Calculator = ({
     const fetchCurrencies = async (p: ConvertPayload) => {
       const result = await convert(p)
       if (result.type === "Error") return console.error(result.message)
-      setState((s) => ({ ...s, to: { ...s.to, amount: result.data.value.toString() }, result }))
+      setState((s) => ({ ...s, to: { ...s.to, amount: result.data.value.toFixed(2).toString() }, result }))
     }
 
     const result = convertPayloadSchema.safeParse({
@@ -47,7 +47,7 @@ export const Calculator = ({
   }, [debouncedState.from.amount, debouncedState.from.currency, debouncedState.to.currency])
 
   const handleSwap = () => {
-    setState((s) => ({ from: s.to, to: { ...s.from, amount: "" } }))
+    setState((s) => ({ from: { ...s.to, amount: s.from.amount }, to: { ...s.from, amount: "" } }))
   }
 
   return (

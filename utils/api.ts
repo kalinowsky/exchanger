@@ -44,7 +44,6 @@ export const fetchCurrencies = async (): Promise<FetchCurrenciesResult> => {
     const transformedResult = result.response.map(convertKeysToCamelCase)
     return { type: "Success", data: transformedResult }
   } catch (error) {
-    console.log(error)
     return { type: "Error", message: "Could not fetch data" }
   }
 }
@@ -68,7 +67,6 @@ export const fetchConvert = async (params: {
     const result = await currencyConversionSchema.parseAsync(uknownResult)
     return { type: "Success", data: result.response }
   } catch (error) {
-    console.log(error)
     return { type: "Error", message: "Could not fetch data" }
   }
 }
