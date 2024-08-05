@@ -14,6 +14,7 @@ type State = {
   from: CurrencySelector
   to: CurrencySelector
   result?: FetchCurrencyConvertionResult
+  isLoading?: boolean
 }
 
 export const Calculator = ({
@@ -26,15 +27,25 @@ export const Calculator = ({
   const [state, setState] = useState<State>({
     from: { amount: "", currency: "PLN" },
     to: { amount: "", currency: "USD" },
+    isLoading: false,
   })
 
   const debouncedState = useDebounce(state, 500)
 
   useEffect(() => {
-    const fetchCurrencies = async (p: ConvertPayload) => {
+    const fetchConvert = async (p: ConvertPayload) => {
+      setState((s) => ({ ...s, isLoading: true }))
       const result = await convert(p)
-      if (result.type === "Error") return console.error(result.message)
-      setState((s) => ({ ...s, to: { ...s.to, amount: result.data.value.toFixed(2).toString() }, result }))
+      if (result.type === "Error") {
+        setState((s) => ({ ...s, isLoading: false }))
+        return console.error(result.message)
+      }
+      setState((s) => ({
+        ...s,
+        to: { ...s.to, amount: result.data.value.toFixed(2).toString() },
+        result,
+        isLoading: false,
+      }))
     }
 
     const result = convertPayloadSchema.safeParse({
@@ -43,7 +54,7 @@ export const Calculator = ({
       amount: state.from.amount,
     })
 
-    if (result.success) fetchCurrencies(result.data)
+    if (result.success) fetchConvert(result.data)
   }, [debouncedState.from.amount, debouncedState.from.currency, debouncedState.to.currency])
 
   const handleSwap = () => {
@@ -80,11 +91,14 @@ export const Calculator = ({
           />
         </div>
       </div>
-      {state?.result?.type === "Success" && (
-        <div className="text-sm text-gray-500 absolute bottom-0 left-0">
-          Converted at {new Date(state.result.data.timestamp * 1000).toLocaleString()}
-        </div>
-      )}
+
+      <div className="text-sm text-gray-500 absolute bottom-0 left-0">
+        {state.isLoading
+          ? "Loading..."
+          : state?.result?.type === "Success"
+          ? `Converted at ${new Date(state.result.data.timestamp * 1000).toLocaleString()}`
+          : ""}
+      </div>
     </div>
   )
 }

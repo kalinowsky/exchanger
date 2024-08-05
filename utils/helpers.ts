@@ -1,8 +1,10 @@
 type SnakeToCamel<S extends string> = S extends `${infer T}_${infer U}` ? `${T}${Capitalize<SnakeToCamel<U>>}` : S
 
-export type ConvertKeysToCamelCase<T> = {
-  [K in keyof T as SnakeToCamel<string & K>]: T[K] extends object ? ConvertKeysToCamelCase<T[K]> : T[K]
-}
+export type ConvertKeysToCamelCase<T> = T extends (infer U)[]
+  ? ConvertKeysToCamelCase<U>[]
+  : {
+      [K in keyof T as SnakeToCamel<string & K>]: T[K] extends object ? ConvertKeysToCamelCase<T[K]> : T[K]
+    }
 
 const snakeToCamel = (snakeCaseString: string): string => {
   return snakeCaseString.replace(/_./g, (match) => match.charAt(1).toUpperCase())

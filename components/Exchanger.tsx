@@ -16,7 +16,7 @@ export const Exchanger = async () => {
 
   return (
     <div className="bg-white h-[260px] min-w-[320px] w-full max-w-[800px] rounded-lg drop-shadow-md	p-4">
-      <Calculator currencies={currenciesResult.data} convert={convert} />
+      <Calculator currencies={currenciesResult.data.response} convert={convert} />
     </div>
   )
 }
